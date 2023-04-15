@@ -1,4 +1,3 @@
-COREGUI = game:GetService("CoreGui")
 local player = game.Players.LocalPlayer
 game.Players.PlayerAdded:Connect(function(p)
     p.Chatted:Connect(function(msg)
