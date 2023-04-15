@@ -1,0 +1,74 @@
+COREGUI = game:GetService("CoreGui")
+local player = game.Players.LocalPlayer
+game.Players.PlayerAdded:Connect(function(p)
+    p.Chatted:Connect(function(msg)
+        if msg == "!fly" then
+            humanoid.PlatformStand = true
+            humanoid:ChangeState(Enum.HumanoidStateType.Flying)
+            wait(1)
+            humanoid.PlatformStand = false
+        elseif msg == "!speed" then
+            humanoid.WalkSpeed = 100
+            wait(5)
+            humanoid.WalkSpeed = 16
+        elseif msg == "!jump" then
+            humanoid.JumpPower = 250
+            wait(5)
+            humanoid.JumpPower = 50
+        end
+    end)
+end)
+
+
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local mouse = player:GetMouse()
+
+local SPIN_SPEED = 5
+local SPIN_DURATION = 10
+
+local isSpinning = false
+local spinStartTime = 0
+
+local PREFIX = "!"
+
+function spin()
+isSpinning = true
+spinStartTime = tick()
+end
+
+function unspin()
+isSpinning = false
+end
+
+function unfly()
+character.Humanoid:ChangeState(Enum.HumanoidStateType.Physics)
+end
+
+game.Players.PlayerAdded:Connect(function(newPlayer)
+newPlayer.Chatted:Connect(function(message)
+if string.sub(message, 1, #PREFIX) == PREFIX then
+local command = string.sub(message, #PREFIX + 1)
+if command == "spin" then
+spin()
+elseif command == "unspin" then
+unspin()
+elseif command == "unfly" then
+unfly()
+end
+end
+end)
+end)
+
+while true do
+if isSpinning then
+local elapsedTime = tick() - spinStartTime
+if elapsedTime < SPIN_DURATION then
+character.Humanoid.Spin = Vector3.new(0, SPIN_SPEED, 0)
+else
+isSpinning = false
+character.Humanoid.Spin = Vector3.new(0, 0, 0)
+end
+end
+wait()
+end
